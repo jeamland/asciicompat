@@ -1,6 +1,6 @@
 import unittest
 
-from asciistr import asciistr
+from asciicompat import asciistr
 
 class TestAsciiStrBasic(unittest.TestCase):
     def test_asciistr_from_str_plus_str(self):

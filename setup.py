@@ -1,10 +1,9 @@
 from distutils.core import setup, Extension
 
-asciistr = Extension('asciistr',
-                    sources = ['asciistr.c'])
+asciicompat = Extension('asciicompat', sources=['asciicompat.c'])
 
-setup (name='asciistr',
+setup (name='asciicompat',
        version='1.0',
        description='The missing type',
-       ext_modules=[asciistr],
+       ext_modules=[asciicompat],
        test_suite="tests")

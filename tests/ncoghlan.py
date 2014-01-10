@@ -37,8 +37,7 @@ both str and any type with a decode method in Python 3"""
 
 
 # Suggested name for Benno :)
-# from asciicompat import asciistr
-from asciistr import asciistr
+from asciicompat import asciistr
 
 # Developing the tests on Python 2
 try:
