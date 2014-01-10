@@ -65,14 +65,28 @@ asciistr_new(PyTypeObject *type, PyObject *args, PyObject *kwds)
 }
 
 static PyObject *
-asciistr_add(PyObject *v, PyObject *w)
+asciistr_concat(PyObject *v, PyObject *w)
 {
+    PyObject *bytes = NULL;
+    Py_buffer view;
 
-    return Py_NotImplemented;
+    if (PyBytes_Check(w)) {
+        if (PyObject_GetBuffer(w, &view, PyBUF_CONTIG_RO) < 0) {
+            return NULL;
+        }
+
+        bytes = PyBytes_FromFormat("%s%s", PyUnicode_DATA(v), (char *)view.buf);
+        PyBuffer_Release(&view);
+
+        return bytes;
+    }
+
+    return PyUnicode_Concat(v, w);
 }
 
-static PyNumberMethods asciistr_as_number = {
-    asciistr_add             /* nb_add */
+static PySequenceMethods asciistr_as_sequence = {
+    0,                           /* sq_length */
+    asciistr_concat              /* sq_concat */
 };
 
 static int
@@ -99,8 +113,8 @@ static PyTypeObject asciistrType = {
     0,                       /* tp_setattr */
     0,                       /* tp_reserved */
     0,                       /* tp_repr */
-    &asciistr_as_number,     /* tp_as_number */
-    0,                       /* tp_as_sequence */
+    0,                       /* tp_as_number */
+    &asciistr_as_sequence,   /* tp_as_sequence */
     0,                       /* tp_as_mapping */
     0,                       /* tp_hash */
     0,                       /* tp_call */
