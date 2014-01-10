@@ -58,6 +58,9 @@ asciistr_new(PyTypeObject *type, PyObject *args, PyObject *kwds)
         return (NULL);
     }
 
+    /* Probably going to hell for this. */
+    Py_TYPE(self) = type;
+
     return self;
 }
 
