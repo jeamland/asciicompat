@@ -1,5 +1,5 @@
-asciistr
-========
+asciicompat
+===========
 
 A hybrid bytes/str type for Python.
 
