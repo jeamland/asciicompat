@@ -27,6 +27,7 @@ asciistr_new(PyTypeObject *type, PyObject *args, PyObject *kwds)
 {
     PyObject *self = NULL;
     PyObject *x = NULL;
+    Py_buffer view;
     static char *kwlist[] = {"object", 0};
 
     if (!PyArg_ParseTupleAndKeywords(args, kwds, "|O:asciistr", kwlist, &x)) {
@@ -35,7 +36,17 @@ asciistr_new(PyTypeObject *type, PyObject *args, PyObject *kwds)
     if (x == NULL)
         _Py_RETURN_ASCIISTR_EMPTY();
 
-    self = PyObject_Str(x);
+    if (PyObject_CheckBuffer(x)) {
+        if (PyObject_GetBuffer(x, &view, PyBUF_CONTIG_RO) < 0) {
+            return NULL;
+        }
+
+        self = PyUnicode_FromString((char *)view.buf);
+        PyBuffer_Release(&view);
+    } else {
+        self = PyObject_Str(x);
+    }
+
     if (PyUnicode_KIND(self) != PyUnicode_1BYTE_KIND) {
         Py_DECREF(self);
         PyErr_SetString(PyExc_ValueError, "asciistr must contain no high-byte characters");
