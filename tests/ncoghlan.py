@@ -38,9 +38,13 @@ both str and any type with a decode method in Python 3"""
 
 # Suggested name for Benno :)
 # from asciicompat import asciistr
+from asciistr import asciistr
 
 # Developing the tests on Python 2
-text_type = unicode
+try:
+    text_type = unicode
+except:
+    text_type = str
 binary_type = bytes
 asciistr = str
 
