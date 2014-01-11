@@ -36,8 +36,11 @@ such an API. It supported both str and unicode in Python 2 and supports
 both str and any type with a decode method in Python 3"""
 
 
-# Suggested name for Benno :)
-from asciicompat import asciistr
+try:
+    from asciicompat import asciistr
+except ImportError:
+    # Python 2 fallback
+    asciistr = str
 
 # Developing the tests on Python 2
 try:
@@ -93,6 +96,26 @@ class HybridTestMixin(object):
     def test_casting(self):
         self.assertEqual(self.output_type(self.exists), self.exists)
         self.assertIs(type(self.output_type(self.exists)), self.output_type)
+
+    # Formatting tests: in Python 2, str formatting always produces
+    # str objects, *except* when a Unicode object is passed to mod-formatting
+    def test_mod_formatting(self):
+        formatted = asciistr("%s") % self.input_data
+        self.assertEqual(formatted, self.input_data)
+        self.assertIs(type(formatted), self.output_type)
+        formatted_int = asciistr("%d") % 42
+        # asciistr also avoids the byte constructor length init quirk
+        self.assertEqual(formatted_int, asciistr(42))
+        self.assertIs(type(formatted_int), binary_type)
+
+    def test_format_method(self):
+        formatted = asciistr("{}").format(self.input_data)
+        self.assertEqual(formatted, self.input_data)
+        self.assertIs(type(formatted), binary_type)
+        formatted_int = asciistr("{:d}").format(42)
+        # asciistr also avoids the byte constructor length init quirk
+        self.assertEqual(formatted_int, asciistr(42))
+        self.assertIs(type(formatted_int), binary_type)
 
 
 class TestBinaryInteraction(unittest.TestCase, HybridTestMixin):
