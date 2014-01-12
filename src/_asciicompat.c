@@ -144,16 +144,16 @@ static PyTypeObject asciistrType = {
     asciistr_new,            /* tp_new */
 };
 
-static PyModuleDef asciicompatmodule = {
+static PyModuleDef _asciicompatmodule = {
     PyModuleDef_HEAD_INIT,
-    "asciicompat",
-    "asciicompat module",
+    "_asciicompat",
+    "_asciicompat module",
     -1,
     NULL, NULL, NULL, NULL, NULL
 };
 
 PyMODINIT_FUNC
-PyInit_asciicompat(void)
+PyInit__asciicompat(void)
 {
     PyObject *m;
 
@@ -161,7 +161,7 @@ PyInit_asciicompat(void)
     if (PyType_Ready(&asciistrType) < 0)
         return NULL;
 
-    m = PyModule_Create(&asciicompatmodule);
+    m = PyModule_Create(&_asciicompatmodule);
     if (m == NULL)
         return NULL;
 

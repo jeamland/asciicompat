@@ -1,9 +1,14 @@
 from distutils.core import setup, Extension
 
-asciicompat = Extension('asciicompat', sources=['asciicompat.c'])
+_asciicompat = Extension('asciicompat._asciicompat',
+                         sources=['src/_asciicompat.c'])
 
-setup (name='asciicompat',
-       version='1.0',
-       description='The missing type',
-       ext_modules=[asciicompat],
-       test_suite="tests")
+setup(name='asciicompat',
+      version='1.0',
+      description='The missing type',
+      author='Benno Rice',
+      author_email='benno@jeamland.net',
+      url='https://github.com/jeamland/asciicompat',
+      packages=['asciicompat'],
+      ext_modules=[_asciicompat],
+      test_suite="tests")
